@@ -281,7 +281,6 @@ extension AppViewModel {
         proxyGroups = []
         proxyDelaySamples = [:]
         proxyNodeTypes = [:]
-        groupLatencyLoading = []
         proxyLatencyTesting = []
         providerProxyCount = 0
         proxyProvidersDetail = [:]
@@ -310,7 +309,6 @@ extension AppViewModel {
 
         memory = MemorySnapshot(inuse: 0)
 
-        groupLatencyLoading.removeAll(keepingCapacity: false)
         proxyLatencyTesting.removeAll(keepingCapacity: false)
 
         providerRuleCount = 0

@@ -7,10 +7,6 @@ final class ProxyStore: ObservableObject {
         willSet { self.publishChangeIfNeeded(current: self.proxyGroups, next: newValue) }
     }
 
-    var groupLatencyLoading: Set<String> = [] {
-        willSet { self.publishChangeIfNeeded(current: self.groupLatencyLoading, next: newValue) }
-    }
-
     var proxyLatencyTesting: Set<ProxyLatencyTestKey> = [] {
         willSet { self.publishChangeIfNeeded(current: self.proxyLatencyTesting, next: newValue) }
     }

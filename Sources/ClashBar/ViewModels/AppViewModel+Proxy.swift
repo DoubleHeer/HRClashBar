@@ -131,35 +131,6 @@ extension AppViewModel {
         }
     }
 
-    func refreshGroupLatency(_ group: ProxyGroup) async {
-        groupLatencyLoading.insert(group.name)
-        defer { groupLatencyLoading.remove(group.name) }
-
-        let testURL = group.testUrl?.trimmedNonEmpty ?? defaultHealthcheckURL
-        let timeout = group.timeout.flatMap { $0 > 0 ? $0 : nil } ?? defaultHealthcheckTimeoutMilliseconds
-        await runRefresh {
-            let response: GroupDelayMeasurement = try await self.clientOrThrow().request(
-                .groupDelay(name: group.name, url: testURL, timeout: timeout))
-            self.applyMeasuredNodeDelays(response.values)
-        }
-    }
-
-    func refreshAllGroupLatencies(includeHiddenGroups: Bool = false) async {
-        let modeScopedGroups = self.currentMode == .global
-            ? self.proxyGroups
-            : self.proxyGroups.filter { $0.name.caseInsensitiveCompare("GLOBAL") != .orderedSame }
-        let groups = includeHiddenGroups
-            ? modeScopedGroups
-            : modeScopedGroups.filter { $0.hidden != true }
-        await withTaskGroup(of: Void.self) { taskGroup in
-            for group in groups {
-                taskGroup.addTask { [weak self] in
-                    await self?.refreshGroupLatency(group)
-                }
-            }
-        }
-    }
-
     func isProxyLatencyTesting(group: String, node: String) -> Bool {
         self.proxyLatencyTesting.contains(ProxyLatencyTestKey(group: group, node: node))
     }

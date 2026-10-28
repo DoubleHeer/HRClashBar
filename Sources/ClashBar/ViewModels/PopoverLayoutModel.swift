@@ -30,7 +30,7 @@ final class PopoverLayoutModel: ObservableObject {
     }
 
     func updateMaximumPanelHeight(_ height: CGFloat) {
-        let normalized = max(1, height.rounded(.down))
+        let normalized = max(1, min(height.rounded(.down), 470))
         guard abs(self.maxPanelHeight - normalized) > 0.5 else { return }
 
         self.maxPanelHeight = normalized

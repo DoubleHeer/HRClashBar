@@ -41,11 +41,7 @@ struct ProxyTabView: TranslatingView {
     @EnvironmentObject var proxyStore: ProxyStore
     @EnvironmentObject var trafficStore: TrafficStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
-    @ObservedObject var rootViewModel: ProxyGroupsViewModel
 
-    @AppStorage("clashbar.proxy.group.sort_nodes_by_latency") var sortGroupNodesByLatency: Bool = false
-    @AppStorage("clashbar.proxy.group.show_latency_history") var showLatencyHistory: Bool = false
-    @AppStorage("clashbar.proxy.group.hide_hidden") var hideHiddenProxyGroups: Bool = true
     @AppStorage("clashbar.proxy.providers.collapsed") var isProxyProvidersCollapsed: Bool = false
 
     @State var copiedProxyCommandTarget: ProxyCommandCopyTarget?
@@ -353,7 +349,6 @@ struct ProxyTabView: TranslatingView {
             if !self.proxyStore.sortedProxyProviderNames.isEmpty {
                 proxyProvidersSection
             }
-            proxyGroupsSection
         }
         .fixedSize(horizontal: false, vertical: true)
     }

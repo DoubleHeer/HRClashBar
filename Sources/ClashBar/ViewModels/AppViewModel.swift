@@ -76,11 +76,6 @@ final class AppViewModel: ObservableObject {
         set { self.proxyStore.proxyGroups = newValue }
     }
 
-    var groupLatencyLoading: Set<String> {
-        get { self.proxyStore.groupLatencyLoading }
-        set { self.proxyStore.groupLatencyLoading = newValue }
-    }
-
     var proxyLatencyTesting: Set<ProxyLatencyTestKey> {
         get { self.proxyStore.proxyLatencyTesting }
         set { self.proxyStore.proxyLatencyTesting = newValue }

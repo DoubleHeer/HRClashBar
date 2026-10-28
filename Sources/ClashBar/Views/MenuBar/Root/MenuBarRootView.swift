@@ -64,10 +64,6 @@ struct MenuBarRootView: TranslatingView {
     @State var modeAndTabSectionHeight: CGFloat = 0
     @State var footerBarHeight: CGFloat = 0
     @State var currentTabContentHeight: CGFloat = 0
-    @AppStorage("clashbar.proxy.group.hide_hidden") var hideHiddenProxyGroups: Bool = true
-    @AppStorage("clashbar.proxy.group.sort_nodes_by_latency") var sortGroupNodesByLatency: Bool =
-        false
-
     var contentWidth: CGFloat {
         T.panelWidth - (T.space8 * 2)
     }
@@ -135,10 +131,6 @@ struct MenuBarRootView: TranslatingView {
                 self.setCurrentTabWithoutAnimation(self.appViewModel.activeMenuTab)
                 self.appViewModel.setActiveMenuTab(self.rootViewModel.currentTab)
                 self.refreshDerivedData(for: self.rootViewModel.currentTab)
-                self.rootViewModel.updateFilteredProxyGroups(
-                    from: self.proxyStore.proxyGroups,
-                    hideHiddenGroups: self.hideHiddenProxyGroups,
-                    currentMode: self.appViewModel.currentMode)
                 publishPreferredPanelHeight()
             }
             .onChange(of: self.rootViewModel.currentTab) { tab in
@@ -158,31 +150,13 @@ struct MenuBarRootView: TranslatingView {
             .onChange(of: self.popoverLayoutModel.maxPanelHeight) { _ in
                 publishPreferredPanelHeight()
             }
-            .onChange(of: self.proxyStore.proxyGroups) { newGroups in
-                self.rootViewModel.updateFilteredProxyGroups(
-                    from: newGroups,
-                    hideHiddenGroups: self.hideHiddenProxyGroups,
-                    currentMode: self.appViewModel.currentMode)
-            }
-            .onChange(of: self.hideHiddenProxyGroups) { newValue in
-                self.rootViewModel.updateFilteredProxyGroups(
-                    from: self.proxyStore.proxyGroups,
-                    hideHiddenGroups: newValue,
-                    currentMode: self.appViewModel.currentMode)
-            }
-            .onChange(of: self.appViewModel.currentMode) { newMode in
-                self.rootViewModel.updateFilteredProxyGroups(
-                    from: self.proxyStore.proxyGroups,
-                    hideHiddenGroups: self.hideHiddenProxyGroups,
-                    currentMode: newMode)
-            }
     }
 
     @ViewBuilder
     func tabBody(for tab: RootTab) -> some View {
         switch tab {
         case .proxy:
-            ProxyTabView(rootViewModel: self.rootViewModel)
+            ProxyTabView()
         case .rules:
             RulesTabView()
         case .connections:

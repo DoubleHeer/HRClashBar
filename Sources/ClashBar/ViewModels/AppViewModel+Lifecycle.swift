@@ -9,7 +9,6 @@ extension AppViewModel {
         let refreshProxyGroupsAfterBootstrap: Bool
         let refreshSystemProxyBeforeOverlay: Bool
         let refreshSystemProxyAfterBootstrap: Bool
-        let autoTestGroupLatencies: Bool
     }
 
     private enum CoreTransitionKind {
@@ -63,8 +62,7 @@ extension AppViewModel {
                     providerTrigger: .start,
                     refreshProxyGroupsAfterBootstrap: false,
                     refreshSystemProxyBeforeOverlay: true,
-                    refreshSystemProxyAfterBootstrap: false,
-                    autoTestGroupLatencies: true))
+                    refreshSystemProxyAfterBootstrap: false))
         } catch {
             preserveLocalSettingsOnNextSync = false
             let message = tr("log.start.failed", self.coreErrorMessage(error))
@@ -145,8 +143,7 @@ extension AppViewModel {
                     providerTrigger: trigger,
                     refreshProxyGroupsAfterBootstrap: true,
                     refreshSystemProxyBeforeOverlay: false,
-                    refreshSystemProxyAfterBootstrap: true,
-                    autoTestGroupLatencies: false))
+                    refreshSystemProxyAfterBootstrap: true))
         } catch {
             preserveLocalSettingsOnNextSync = false
             self.reportCoreRestartFailure(message: tr("log.restart.failed", self.coreErrorMessage(error)))
@@ -347,12 +344,6 @@ extension AppViewModel {
         startupErrorMessage = nil
         await self.restoreCoreFeaturesAfterStartupIfNeeded()
         enforceNetworkManagedCorePolicyIfNeeded()
-
-        if options.autoTestGroupLatencies {
-            Task { [weak self] in
-                await self?.refreshAllGroupLatencies()
-            }
-        }
     }
 
     private func overlayApplyingPendingCoreFeatureRecovery(_ overlay: EditableSettingsSnapshot)
